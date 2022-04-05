@@ -11,5 +11,6 @@ certs.gmtime_adj_notAfter(31536000)
 certs.set_subject(csr_req.get_subject())
 certs.set_issuer(ca_cert.get_subject())
 certs.set_pubkey(k)
-certs.sign(ca_key, 'sha512’)certificate = crypto.dump_certificate(crypto.FILETYPE_PEM, certs)
+certs.sign(ca_key, 'sha512’)
+certificate = crypto.dump_certificate(crypto.FILETYPE_PEM, certs)
 
