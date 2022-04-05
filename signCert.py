@@ -1,10 +1,10 @@
 #!/usr/local/bin/python3
 
-from email.policy import default
-from re import I
 from cryptography import x509
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.x509.oid import NameOID
 from cryptography.hazmat.backends import default_backend
 import datetime
 from datetime import timedelta, datetime 
@@ -43,7 +43,4 @@ cert = x509.load_pem_x509_certificate(cert_data, default_backend())
 
 privKey = serialization.load_pem_private_key(keyy, password=None)
 
-certSign = sign_certificate_request(csr, cert, privKey)
-
-with open("/home/toto/crypto/certificateSign.pem", "wb") as f:
-    f.write(certSign.public_bytes(serialization.Encoding.PEM))
+sign_certificate_request(csr, cert, privKey)
