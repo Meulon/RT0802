@@ -1,5 +1,7 @@
 #!/usr/local/bin/python3
 
+from cryptography import x509
+
 def sign_certificate_request(csr_cert, ca_cert, private_ca_key):
     cert = x509.CertificateBuilder().subject_name(
         csr_cert.subject
