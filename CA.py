@@ -5,7 +5,6 @@ from cryptography.hazmat.primitives import serialization
 from cryptography import x509
 from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import hashes
-from datetime import timedelta
 import datetime 
 
 # Generate our key
