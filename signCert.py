@@ -1,6 +1,7 @@
 #!/usr/local/bin/python3
 
 from cryptography import x509
+from cryptography.hazmat.primitives import serialization
 
 def sign_certificate_request(csr_cert, ca_cert, private_ca_key):
     cert = x509.CertificateBuilder().subject_name(
@@ -22,4 +23,11 @@ def sign_certificate_request(csr_cert, ca_cert, private_ca_key):
     # return DER certificate
     return cert.public_bytes(serialization.Encoding.DER)
 
-sign_certificate_request('/home/toto/crypto/csr.pem', '/home/toto/crypto/certificate.pem', '/home/toto/crypto/key.pem')
+aze = x509.load_der_x509_csr('/home/toto/crypto/csr.pem')
+
+qsd = x509.load_pem_x509_certificate('/home/toto/crypto/certificate.pem')
+
+wxc = serialization.load_pem_private_key('/home/toto/crypto/key.pem')
+
+
+sign_certificate_request(aze, qsd, wxc)
