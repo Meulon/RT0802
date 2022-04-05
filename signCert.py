@@ -1,16 +1,23 @@
 #!/usr/local/bin/python3
 
-serialnumber = random.getrandbits(64)
-ca_cert = crypto.load_certificate(crypto.FILETYPE_PEM, "/home/toto/crypto/certificate.pem")
-ca_key = crypto.load_privatekey(crypto.FILETYPE_PEM, "/home/toto/crypto/key2.pem")
-certs = crypto.X509()
-csr_req = crypto.load_certificate_request(crypto.FILETYPE_PEM, "/home/toto/crypto/csr.pem")
-certs.set_serial_number(serialnumber)
-certs.gmtime_adj_notBefore(0)
-certs.gmtime_adj_notAfter(31536000)
-certs.set_subject(csr_req.get_subject())
-certs.set_issuer(ca_cert.get_subject())
-certs.set_pubkey(k)
-certs.sign(ca_key, 'sha512’)
-certificate = crypto.dump_certificate(crypto.FILETYPE_PEM, certs)
+def sign_certificate_request(csr_cert, ca_cert, private_ca_key):
+    cert = x509.CertificateBuilder().subject_name(
+        csr_cert.subject
+    ).issuer_name(
+        ca_cert.subject
+    ).public_key(
+        csr_cert.public_key()
+    ).serial_number(
+        x509.random_serial_number()
+    ).not_valid_before(
+        datetime.utcnow()
+    ).not_valid_after(
+        # Our certificate will be valid for 10 days
+        datetime.utcnow() + timedelta(days=10)
+    # Sign our certificate with our private key
+    ).sign(private_ca_key, hashes.SHA256())
 
+    # return DER certificate
+    return cert.public_bytes(serialization.Encoding.DER)
+
+sign_certificate_request('/home/toto/crypto/csr.pem', '/home/toto/crypto/certificate.pem', '/home/toto/crypto/key.pem')
