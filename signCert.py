@@ -43,4 +43,7 @@ cert = x509.load_pem_x509_certificate(cert_data, default_backend())
 
 privKey = serialization.load_pem_private_key(keyy, password=None)
 
-sign_certificate_request(csr, cert, privKey)
+certSign = sign_certificate_request(csr, cert, privKey)
+
+with open("/home/toto/crypto/certificateSign.pem", "wb") as f:
+    f.write(certSign.public_bytes(serialization.Encoding.PEM))
