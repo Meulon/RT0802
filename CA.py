@@ -1,6 +1,5 @@
 #!/usr/local/bin/python3
 
-from tkinter import W
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from cryptography import x509
