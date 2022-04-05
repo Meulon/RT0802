@@ -26,11 +26,14 @@ def sign_certificate_request(csr_cert, ca_cert, private_ca_key):
     # return DER certificate
     return cert.public_bytes(serialization.Encoding.DER)
 
-with open('/home/toto/crypto/csr.pem', 'rb') as f:
-        pem_data = f.read()
+with open('/home/toto/crypto/csr.pem', 'rb') as f1:
+        csr_data = f1.read()
 
-csr = x509.load_pem_x509_csr(pem_data, default_backend())
-cert = x509.load_pem_x509_certificate('/home/toto/crypto/certificate.pem')
+with open('/home/toto/crypto/certificate.pem', 'rb') as f2:
+        cert_data = f2.read()
+
+csr = x509.load_pem_x509_csr(csr_data, default_backend())
+cert = x509.load_pem_x509_certificate(cert_data, default_backend())
 
 privKey = serialization.load_pem_private_key('/home/toto/crypto/key.pem')
 
