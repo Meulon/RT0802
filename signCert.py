@@ -1,7 +1,6 @@
 #!/usr/local/bin/python3
 
 from email.policy import default
-from tkinter import W
 from cryptography import x509
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
