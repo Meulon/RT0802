@@ -29,5 +29,5 @@ qsd = x509.load_pem_x509_certificate('/home/toto/crypto/certificate.pem')
 
 wxc = serialization.load_pem_private_key('/home/toto/crypto/key.pem')
 
-
+print (aze)
 sign_certificate_request(aze, qsd, wxc)
