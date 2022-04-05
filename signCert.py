@@ -45,7 +45,7 @@ T+suiqLJJRD0r729+uEpR1Q2P/YqRBPPaQkBB3R3GqbEigPXQ5ZMHW82vbTyCbO1
 OtokrtbTYkCu7NnuTvEcFkgM8c9kREibGgi7WGLTznL9/+USjw==
 -----END CERTIFICATE REQUEST-----'''
 
-csr1 = x509.load_pem_x509_csr(csr)
+csr1 = x509.load_pem_x509_csr(csr, default_backend())
 cert = x509.load_pem_x509_certificate('/home/toto/crypto/certificate.pem')
 
 privKey = serialization.load_pem_private_key('/home/toto/crypto/key.pem')
