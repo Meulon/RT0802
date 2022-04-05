@@ -1,5 +1,7 @@
 #!/usr/local/bin/python3
 
+from cryptography.hazmat.primitives.asymmetric import rsa
+
 # Generate our key
 key = rsa.generate_private_key(
     public_exponent=65537,
