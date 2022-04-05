@@ -26,7 +26,7 @@ def sign_certificate_request(csr_cert, ca_cert, private_ca_key):
     # return DER certificate
     return cert.public_bytes(serialization.Encoding.DER)
 
-with open(path, '/home/toto/crypto/csr.pem') as f:
+with open('/home/toto/crypto/csr.pem', 'rb') as f:
         pem_data = f.read()
 
 csr = x509.load_pem_x509_csr(pem_data, default_backend())
