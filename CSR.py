@@ -73,6 +73,6 @@ csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name([
 
 # Write our CSR out to disk.
 
-with open("path/to/csr.pem", "wb") as f:
+with open("/home/toto/crypto/csr.pem", "wb") as f:
 
     f.write(csr.public_bytes(serialization.Encoding.PEM))
