@@ -7,7 +7,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 import datetime
-from datetime import timedelta 
+from datetime import timedelta, datetime 
 
 def sign_certificate_request(csr_cert, ca_cert, private_ca_key):
     cert = x509.CertificateBuilder().subject_name(
