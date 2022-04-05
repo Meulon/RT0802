@@ -1,5 +1,6 @@
 #!/usr/local/bin/python3
 
+from email.policy import default
 from cryptography import x509
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
@@ -25,7 +26,7 @@ def sign_certificate_request(csr_cert, ca_cert, private_ca_key):
     # return DER certificate
     return cert.public_bytes(serialization.Encoding.DER)
 
-csr = x509.load_pem_x509_csr("/home/toto/crypto/csr.pem", backend=None)
+csr = x509.load_pem_x509_csr(bytes("/home/toto/crypto/csr.pem"), default_backend())
 cert = x509.load_pem_x509_certificate('/home/toto/crypto/certificate.pem')
 
 privKey = serialization.load_pem_private_key('/home/toto/crypto/key.pem')
