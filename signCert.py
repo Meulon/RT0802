@@ -8,7 +8,7 @@ from cryptography.x509.oid import NameOID
 from cryptography.hazmat.backends import default_backend
 import datetime
 from datetime import timedelta, datetime 
-from os import path, name
+import os 
 
 def sign_certificate_request(csr_cert, ca_cert, private_ca_key):
     cert = x509.CertificateBuilder().subject_name(
