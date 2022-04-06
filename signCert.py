@@ -1,6 +1,5 @@
 #!/usr/local/bin/python3
 
-import encodings
 from cryptography import x509
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
@@ -39,7 +38,7 @@ def savecrttofile(certificate):
 		os.umask(0)
 
 		with open(os.open(crt_file, os.O_CREAT | os.O_WRONLY, 0o1600), 'wb+') as crt_file_obj:
-			crt_file_obj.write(certificate.public_bytes(encodings.PEM))
+			crt_file_obj.write(certificate)
 			crt_file_obj.close()
 
 	except:
