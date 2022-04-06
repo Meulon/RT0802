@@ -43,14 +43,21 @@ def savecrttofile(certificate):
 	else:
 		return "[+] Le certificat a été générée dans le fichier " + crt_file
 
-with open('/home/toto/crypto/csr.pem', 'rb') as f1:
-        csr_data = f1.read()
+def load_csr(path):
+    with open(path, 'rb') as f:
+        pem_data = f.read()
+    return x509.load_pem_x509_csr(pem_data, default_backend()) 
+
+#with open('/home/toto/crypto/csr.pem', 'rb') as f1:
+ #       csr_data = f1.read()
 
 with open('/home/toto/crypto/certificate.pem', 'rb') as f2:
         cert_data = f2.read()
 
 with open('/home/toto/crypto/key2.pem', 'rb') as f3:
         keyy = f3.read()
+
+csr_data = load_csr('/home/toto/crypto/csr.pem')
 
 csr = x509.load_pem_x509_csr(csr_data, default_backend())
 cert = x509.load_pem_x509_certificate(cert_data, default_backend())
