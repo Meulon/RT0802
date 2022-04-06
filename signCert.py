@@ -33,18 +33,11 @@ def sign_certificate_request(csr_cert, ca_cert, private_ca_key):
 def savecrttofile(certificate):
 	crt_file="CRT.pem"
 
-	try:
-		os.umask(0)
+	with open(os.open(crt_file, os.O_CREAT | os.O_WRONLY, 0o1600), 'wb+') as crt_file_obj:
+		crt_file_obj.write(certificate.public_bytes(Encoding.PEM))
+	    crt_file_obj.close()
 
-		with open(os.open(crt_file, os.O_CREAT | os.O_WRONLY, 0o1600), 'wb+') as crt_file_obj:
-			crt_file_obj.write(certificate.public_bytes(Encoding.PEM))
-
-			crt_file_obj.close()
-
-	except:
-		raise
-	else:
-		return "[+] Le certificat a été générée dans le fichier " + crt_file
+	return "[+] Le certificat a été générée dans le fichier " + crt_file
 
 with open('/home/toto/crypto/csr.pem', 'rb') as f1:
         csr_data = f1.read()
