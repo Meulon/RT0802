@@ -57,9 +57,9 @@ with open('/home/toto/crypto/certificate.pem', 'rb') as f2:
 with open('/home/toto/crypto/key2.pem', 'rb') as f3:
         keyy = f3.read()
 
-csr_data = load_csr('/home/toto/crypto/csr.pem')
+csr = load_csr('/home/toto/crypto/csr.pem')
 
-csr = x509.load_pem_x509_csr(csr_data, default_backend())
+# csr = x509.load_pem_x509_csr(csr_data, default_backend())
 cert = x509.load_pem_x509_certificate(cert_data, default_backend())
 
 privKey = serialization.load_pem_private_key(keyy, password=None)
