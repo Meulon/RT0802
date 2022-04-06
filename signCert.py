@@ -59,7 +59,7 @@ def load_cert(path):
 def load_privateKey(path):
     with open(path, 'rb') as f:
         pem_data = f.read()
-    return serialization.load_pem_private_key(pem_data, password=None)
+    return serialization.load_pem_private_key(pem_data, password='passphrase')
 
 # with open('/home/toto/crypto/certificate.pem', 'rb') as f2:
 #        cert_data = f2.read()
