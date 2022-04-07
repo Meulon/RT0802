@@ -45,7 +45,7 @@ aze = load_cert("CRT.pem")
 
 def verification(message1, signature1, certificat1):
     public_key = certificat1.public_key()
-    subject = certificat1.subject()
+    # subject = certificat1.subject()
 
     verif = public_key.verify(
         signature1,
@@ -61,7 +61,7 @@ def verification(message1, signature1, certificat1):
         print("message:", message1)
         print("signature valide")
         print("message valide")
-        print("provient bien de:", subject)
+        # print("provient bien de:", subject)
         # VALIDER QUE CE SOIT BIEN L'UTILISATEUR DU CERTIFICAT
     else:
         print("message:", message1)
