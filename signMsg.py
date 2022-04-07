@@ -4,12 +4,13 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 
 message = b"A message I want to sign"
-private_key = load_privateKey("/home/toto/crypto/key2.pem")
 
 def load_privateKey(path):
     with open(path, 'rb') as f:
         pem_data = f.read()
     return serialization.load_pem_private_key(pem_data, password=b"passphrase")
+
+private_key = load_privateKey("/home/toto/crypto/key2.pem")
 
 signature = private_key.sign(
     message,
