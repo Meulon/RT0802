@@ -77,7 +77,7 @@ uio = load_cert("/home/toto/crypto/certificate.pem")
 
 keye = load_publicKey("pubkey.pem")
 
-print(keye)
+print(base64.b64encode(keye))
 
 issuer_public_key = load_pem_public_key(pem_issuer_public_key)
 
