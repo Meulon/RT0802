@@ -75,11 +75,9 @@ uio = load_cert("/home/toto/crypto/certificate.pem")
 
 # issuer_public_key = uio.public_key()
 
-keye = load_publicKey("pubkey.pem")
+issuer_public_key = load_publicKey("pubkey.pem")
 
-print(base64.b64encode(keye))
-
-issuer_public_key = load_pem_public_key(pem_issuer_public_key)
+# issuer_public_key = load_pem_public_key(pem_issuer_public_key)
 
 mpm = issuer_public_key.verify(
     aze.signature,
