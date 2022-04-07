@@ -12,15 +12,18 @@ def load_privateKey(path):
         pem_data = f.read()
     return serialization.load_pem_private_key(pem_data, password=b"passphrase")
 
+def signMsg(message, key):
+    key.sign(
+        message,
+        padding.PSS(
+            mgf=padding.MGF1(hashes.SHA256()),
+            salt_length=padding.PSS.MAX_LENGTH
+    ),
+    hashes.SHA256() 
+)
+
 private_key = load_privateKey("/home/toto/crypto/key2.pem")
 
-signature = private_key.sign(
-    message,
-    padding.PSS(
-        mgf=padding.MGF1(hashes.SHA256()),
-        salt_length=padding.PSS.MAX_LENGTH
-    ),
-    hashes.SHA256()
-)
+signature = signMsg(message, private_key)
 
 print(base64.b64encode(signature))
