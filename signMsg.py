@@ -36,16 +36,18 @@ print(base64.b64encode(signature))
 
 aze = load_cert("CRT.pem")
 
-public_key = aze.public_key()
-
-efd = public_key.verify(
-    signature,
-    message,
-    padding.PSS(
-        mgf=padding.MGF1(hashes.SHA256()),
-        salt_length=padding.PSS.MAX_LENGTH
-    ),
-    hashes.SHA256()
+def verification(message1, signature1, certificat1):
+    public_key = certificat1.public_key()
+    return public_key.verify(
+            signature1,
+            message1,
+            padding.PSS(
+                mgf=padding.MGF1(hashes.SHA256()),
+                salt_length=padding.PSS.MAX_LENGTH
+        ),
+            hashes.SHA256()
 )
+
+efd = verification(message, signature, aze)
 
 print(efd)
