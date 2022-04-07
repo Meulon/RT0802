@@ -34,7 +34,7 @@ signature = signMsg(message, private_key)
 
 print(base64.b64encode(signature))
 
-aze = load_cert("CRT.pem")
+aze = load_cert("/home/toto/crypto/certificate.pem")
 
 public_key = aze.public_key()
 
