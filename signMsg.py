@@ -71,7 +71,23 @@ efd = verification(message, signature, aze)
 
 print(efd)
 
-uio = load_cert("/home/toto/crypto/certificate.pem")
+
+
+def verifySignCert(cert, certCA):
+    CA_publicKey = certCA.public_key()
+    verif = CA_publicKey.verify(
+        cert.signature,
+        cert.tbs_certificate_bytes,
+        # Depends on the algorithm used to create the certificate
+        padding.PKCS1v15(),
+        cert.signature_hash_algorithm,
+    )
+    if verif == None:
+        print("certificat authentique")
+    else:
+        print("certificat non validé par le CA")
+
+CA_cert = load_cert("/home/toto/crypto/certificate.pem")
 
 issuer_public_key = uio.public_key()
 
@@ -88,3 +104,5 @@ mpm = issuer_public_key.verify(
 )
 
 print(mpm)
+
+verifySignCert(aze, CA_cert)
