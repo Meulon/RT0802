@@ -36,7 +36,7 @@ def load_cert(path):
         pem_data = f.read()
     return x509.load_pem_x509_certificate(pem_data, default_backend())
 
-private_key = load_privateKey("/home/toto/crypto/key2.pem")
+private_key = load_privateKey("/home/toto/crypto/key4.pem")
 signature = signMsg(message, private_key)
 
 print(base64.b64encode(signature))
