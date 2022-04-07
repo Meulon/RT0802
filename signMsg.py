@@ -20,9 +20,9 @@ def signMsg(message, key):
         padding.PSS(
             mgf=padding.MGF1(hashes.SHA256()),
             salt_length=padding.PSS.MAX_LENGTH
-    ),
-    hashes.SHA256() 
-)
+        ),
+        hashes.SHA256() 
+    )
 
 def load_cert(path):
     with open(path, 'rb') as f:
@@ -38,15 +38,26 @@ aze = load_cert("CRT.pem")
 
 def verification(message1, signature1, certificat1):
     public_key = certificat1.public_key()
-    return public_key.verify(
-            signature1,
-            message1,
-            padding.PSS(
-                mgf=padding.MGF1(hashes.SHA256()),
-                salt_length=padding.PSS.MAX_LENGTH
-        ),
-            hashes.SHA256()
-)
+    
+    verif = public_key.verify(
+        signature1,
+        message1,
+        padding.PSS(
+            mgf=padding.MGF1(hashes.SHA256()),
+            salt_length=padding.PSS.MAX_LENGTH
+    ),
+        hashes.SHA256()
+    )
+    
+    if verif == "none":
+        print("message:" message1)
+        print("signature valide")
+        print("message valide")
+    else:
+        print("message:" message1)
+        print("attention signature invalide")
+        print("message n'a pas été signé par le propriétaire du certificat")        
+
 
 efd = verification(message, signature, aze)
 
