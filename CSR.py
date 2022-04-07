@@ -15,7 +15,7 @@ key = rsa.generate_private_key(
 
 # Write our key to disk for safe keeping
 
-with open("/home/toto/crypto/key2.pem", "wb") as f:
+with open("/home/toto/crypto/key4.pem", "wb") as f:
     f.write(key.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.TraditionalOpenSSL,
