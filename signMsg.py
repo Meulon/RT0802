@@ -13,7 +13,7 @@ def load_privateKey(path):
     return serialization.load_pem_private_key(pem_data, password=b"passphrase")
 
 def signMsg(message, key):
-    key.sign(
+    return key.sign(
         message,
         padding.PSS(
             mgf=padding.MGF1(hashes.SHA256()),
