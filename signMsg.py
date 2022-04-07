@@ -50,11 +50,11 @@ def verification(message1, signature1, certificat1):
     )
     
     if verif == "none":
-        print("message:" message1)
+        print("message:", message1)
         print("signature valide")
         print("message valide")
     else:
-        print("message:" message1)
+        print("message:", message1)
         print("attention signature invalide")
         print("message n'a pas été signé par le propriétaire du certificat")        
 
