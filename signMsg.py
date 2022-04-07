@@ -71,7 +71,7 @@ efd = verification(message, signature, aze)
 
 print(efd)
 
-uio = load_cert("CRT.pem")
+uio = load_cert("/home/toto/crypto/certificate.pem")
 
 issuer_public_key = uio.public_key()
 
