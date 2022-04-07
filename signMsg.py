@@ -1,5 +1,6 @@
 #!/usr/local/bin/python3
 
+import base64
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization
