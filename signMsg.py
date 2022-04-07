@@ -49,7 +49,7 @@ def verification(message1, signature1, certificat1):
         hashes.SHA256()
     )
     
-    if verif == "none":
+    if verif == "None":
         print("message:", message1)
         print("signature valide")
         print("message valide")
