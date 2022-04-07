@@ -89,20 +89,20 @@ def verifySignCert(cert, certCA):
 
 CA_cert = load_cert("/home/toto/crypto/certificate.pem")
 
-issuer_public_key = uio.public_key()
+# issuer_public_key = uio.public_key()
 
 # issuer_public_key = load_publicKey("pubkey.pem")
 
 # issuer_public_key = load_pem_public_key(pem_issuer_public_key)
 
-mpm = issuer_public_key.verify(
-    aze.signature,
-    aze.tbs_certificate_bytes,
-    # Depends on the algorithm used to create the certificate
-    padding.PKCS1v15(),
-    aze.signature_hash_algorithm,
-)
+#mpm = issuer_public_key.verify(
+ #   aze.signature,
+  #  aze.tbs_certificate_bytes,
+   # # Depends on the algorithm used to create the certificate
+    #padding.PKCS1v15(),
+    #aze.signature_hash_algorithm,
+#)
 
-print(mpm)
+#print(mpm)
 
 verifySignCert(aze, CA_cert)
