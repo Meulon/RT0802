@@ -59,6 +59,7 @@ def verification(message1, signature1, certificat1):
         print("message n'a pas été signé par le propriétaire du certificat")        
 
 
-sqsd = type(efd = verification(message, signature, aze))
+efd = verification(message, signature, aze)
 
-print(sqsd)
+qsdz = type(efd)
+print(qsdz)
