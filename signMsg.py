@@ -73,9 +73,9 @@ print(efd)
 
 uio = load_cert("/home/toto/crypto/certificate.pem")
 
-# issuer_public_key = uio.public_key()
+issuer_public_key = uio.public_key()
 
-issuer_public_key = load_publicKey("pubkey.pem")
+# issuer_public_key = load_publicKey("pubkey.pem")
 
 # issuer_public_key = load_pem_public_key(pem_issuer_public_key)
 
