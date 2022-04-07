@@ -16,6 +16,11 @@ def load_privateKey(path):
         pem_data = f.read()
     return serialization.load_pem_private_key(pem_data, password=b"passphrase")
 
+def load_publicKey(path):
+    with open(path, 'rb') as f:
+        pem_data = f.read()
+    return serialization.load_pem_public_key(pem_data)
+
 def signMsg(message, key):
     return key.sign(
         message,
@@ -68,7 +73,13 @@ print(efd)
 
 uio = load_cert("/home/toto/crypto/certificate.pem")
 
-issuer_public_key = uio.public_key()
+# issuer_public_key = uio.public_key()
+
+key = load_publicKey("pubkey.pem")
+
+print(key)
+
+issuer_public_key = load_pem_public_key(pem_issuer_public_key)
 
 mpm = issuer_public_key.verify(
     aze.signature,
