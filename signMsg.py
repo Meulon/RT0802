@@ -17,9 +17,9 @@ def load_privateKey(path):
     return serialization.load_pem_private_key(pem_data, password=b"passphrase")
 
 def load_publicKey(path):
-    with open(path, 'rb') as f:
-        pem_data = f.read()
-    return serialization.load_pem_public_key(pem_data)
+    with open(path, 'rb') as f1:
+        pem1_data = f1.read()
+    return serialization.load_pem_public_key(pem1_data)
 
 def signMsg(message, key):
     return key.sign(
