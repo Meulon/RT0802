@@ -1,5 +1,6 @@
 #!/usr/local/bin/python3
 
+import base64
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization
 from cryptography import x509
@@ -32,4 +33,6 @@ message = b"A message with 5 words"
 privateKeyClient = load_privateKey("RSAClient.pem")
 signatureMsg = signMsg(message, privateKeyClient)
 saveToFile(signatureMsg, "test.sign")
-logger.info("Signature: %s", base64.urlsafe_b64encode(signatureMsg))
+aze = base64.urlsafe_b64encode(signatureMsg))
+
+print(aze)
