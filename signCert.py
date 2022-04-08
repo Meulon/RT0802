@@ -53,8 +53,8 @@ def loadPrivateKey(path):
 
 csr = loadCSR('/home/toto/crypto/csr.pem')
 certCA = loadCert('/home/toto/crypto/certificate.pem')
-privateKeyCA = loadPrivateKey('/home/toto/crypto/key2.pem')
+privateKeyCA = loadPrivateKey('RSACA.pem')
 
 aze = signCSR(csr, certCA, privateKeyCA)
 
-saveToFile(aze, "test.pem")
+saveToFile(aze, "certClient.pem")
