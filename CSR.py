@@ -7,13 +7,25 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 
 # Generate our key
+def generateKeyRSA(public_exponent, key_size):
+    rsa.generate_private_key(
+        public_exponent=public_exponent
+        key_size=key_size
+    )
+    return ("Generation Key OK")
 
-key = rsa.generate_private_key(
-    public_exponent=65537,
-    key_size=2048,
-)
+#key = rsa.generate_private_key(
+ #   public_exponent=65537,
+  #  key_size=2048,
+#)
 
 # Write our key to disk for safe keeping
+
+def saveToFile(privateKey, filename):
+	with open(os.open(filename, os.O_CREAT | os.O_WRONLY, 0o1600), 'wb+') as crt_file_obj:
+		crt_file_obj.write(privateKey)
+		crt_file_obj.close()
+	return " Key file: " + filename
 
 with open("/home/toto/crypto/key4.pem", "wb") as f:
     f.write(key.private_bytes(
