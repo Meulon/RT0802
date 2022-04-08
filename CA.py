@@ -49,7 +49,7 @@ cert = x509.CertificateBuilder().subject_name(
     x509.SubjectAlternativeName([x509.DNSName(u"localhost")]),
     critical=False,
 # Sign our certificate with our private key
-).sign(key, hashes.SHA256())
+).sign(RSAkey, hashes.SHA256())
 # Write our certificate out to disk.
 
 with open("/home/toto/crypto/certificate.pem", "wb") as f:
