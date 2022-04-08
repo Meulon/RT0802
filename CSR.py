@@ -9,14 +9,10 @@ import os
 
 # Generate our key
 
-RSAkey = rsa.generate_private_key(
-    public_exponent=65537,
-    key_size=2048,
-)
 
 # Write our key to disk for safe keeping
 
-def saveToFile(keyRSA, filename):
+def saveKeysToFile(keyRSA, filename):
     with open(filename, "wb") as f:
         f.write(keyRSA.private_bytes(
             encoding=serialization.Encoding.PEM,
@@ -25,16 +21,10 @@ def saveToFile(keyRSA, filename):
         ))
     return " Key file: " + filename
 
-
-saveToFile(RSAkey, "RSA.pem")
-
-#with open("/home/toto/crypto/key4.pem", "wb") as f:
-#    f.write(key.private_bytes(
-#        encoding=serialization.Encoding.PEM,
-#        format=serialization.PrivateFormat.TraditionalOpenSSL,
-#        encryption_algorithm=serialization.BestAvailableEncryption(b"passphrase"),
-#    ))
-
+RSAkey = rsa.generate_private_key(
+    public_exponent=65537,
+    key_size=2048,
+)
 
 # Generate a CSR
 
@@ -60,3 +50,5 @@ csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name([
 
 with open("/home/toto/crypto/csr.pem", "wb") as f:
     f.write(csr.public_bytes(serialization.Encoding.PEM))
+
+saveKeysToFile(RSAkey, "RSA.pem")
