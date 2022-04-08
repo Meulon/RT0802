@@ -26,26 +26,17 @@ RSAkey = rsa.generate_private_key(
     key_size=2048,
 )
 
+subject = issuer = x509.Name([
+    x509.NameAttribute(NameOID.COUNTRY_NAME, u"FR"),
+    x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"France"),
+    x509.NameAttribute(NameOID.LOCALITY_NAME, u"Strasbourg"),
+    x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"Strasss Company"),
+    x509.NameAttribute(NameOID.COMMON_NAME, u"strass.fr"),
+])
+
 # Generate a CSR
 
-csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name([
-    # Provide various details about who we are.
-    x509.NameAttribute(NameOID.COUNTRY_NAME, u"FR"),
-    x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"BAS RHIN"),
-    x509.NameAttribute(NameOID.LOCALITY_NAME, u"SXB"),
-    x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"My Company 2"),
-    x509.NameAttribute(NameOID.COMMON_NAME, u"mysite2.com"),
-
-])).add_extension(
-    x509.SubjectAlternativeName([
-        # Describe what sites we want this certificate for.
-        x509.DNSName(u"mysite2.com"),
-        x509.DNSName(u"www.mysite2.com"),
-        x509.DNSName(u"subdomain.mysite2.com"),
-    ]),
-    critical=False,
-# Sign the CSR with our private key.
-).sign(RSAkey, hashes.SHA256())
+csr = x509.CertificateSigningRequestBuilder().subject_name(subject()).sign(RSAkey, hashes.SHA256())
 # Write our CSR out to disk.
 
 with open("/home/toto/crypto/csr.pem", "wb") as f:
