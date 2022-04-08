@@ -16,6 +16,12 @@ def signMsg(message, key):
         hashes.SHA256() 
     )
 
+def saveToFile(signature, filename):
+	with open(os.open(filename, os.O_CREAT | os.O_WRONLY, 0o1600), 'wb+') as crt_file_obj:
+		crt_file_obj.write(signature)
+		crt_file_obj.close()
+	return "[+] Le certificat a été générée dans le fichier " + filename
+
 def load_privateKey(path):
     with open(path, 'rb') as f:
         pem_data = f.read()
@@ -24,3 +30,4 @@ def load_privateKey(path):
 message = b"A message with 5 words"
 privateKeyClient = load_privateKey("RSAClient.pem")
 signatureMsg = signMsg(message, privateKeyClient)
+saveToFile(signatureMsg, "test.sign")
