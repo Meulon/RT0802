@@ -5,6 +5,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography import x509
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
+import os
 
 def signMsg(message, key):
     return key.sign(
