@@ -7,24 +7,20 @@ from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import hashes
 import datetime 
 
+def saveKeysToFile(keyRSA, filename):
+    with open(filename, "wb") as f:
+        f.write(keyRSA.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.TraditionalOpenSSL,
+            encryption_algorithm=serialization.BestAvailableEncryption(b"passphrase"),
+        ))
+    return " Key file: " + filename
+
 # Generate our key
-key = rsa.generate_private_key(
+RSAkey = rsa.generate_private_key(
     public_exponent=65537,
     key_size=2048,
 )
-
-# Write our key to disk for safe keeping
-
-with open("/home/toto/crypto/key2.pem", "wb") as f:
-    f.write(key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.BestAvailableEncryption(b"passphrase"),
-    ))
-
-# Various details about who we are. For a self-signed certificate the
-
-# subject and issuer are always the same.
 
 subject = issuer = x509.Name([
     x509.NameAttribute(NameOID.COUNTRY_NAME, u"US"),
@@ -58,3 +54,5 @@ cert = x509.CertificateBuilder().subject_name(
 
 with open("/home/toto/crypto/certificate.pem", "wb") as f:
     f.write(cert.public_bytes(serialization.Encoding.PEM))
+
+saveKeysToFile(RSAkey, "RSACA.pem")
