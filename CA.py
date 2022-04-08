@@ -19,7 +19,7 @@ def saveKeysToFile(keyRSA, filename):
 def saveCert(cert, filename):
     with open(filename, "wb") as f:
         f.write(cert.public_bytes(serialization.Encoding.PEM))
-    return " Cert file: " + filename
+    return "Cert file: " + filename
 
 # Generate our key
 RSAkey = rsa.generate_private_key(

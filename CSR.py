@@ -21,6 +21,11 @@ def saveKeysToFile(keyRSA, filename):
         ))
     return " Key file: " + filename
 
+def saveCSR(csr, filename):
+    with open(filename, "wb") as f:
+        f.write(csr.public_bytes(serialization.Encoding.PEM))
+    return "CSR file: " + filename
+
 RSAkey = rsa.generate_private_key(
     public_exponent=65537,
     key_size=2048,
@@ -35,11 +40,9 @@ subject = issuer = x509.Name([
 ])
 
 # Generate a CSR
-
 csr = x509.CertificateSigningRequestBuilder().subject_name(subject).sign(RSAkey, hashes.SHA256())
+
 # Write our CSR out to disk.
 
-with open("/home/toto/crypto/csr.pem", "wb") as f:
-    f.write(csr.public_bytes(serialization.Encoding.PEM))
-
 saveKeysToFile(RSAkey, "RSAClient.pem")
+saveCSR(csr, "csr.pem")
