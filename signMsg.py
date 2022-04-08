@@ -36,14 +36,8 @@ def load_cert(path):
         pem_data = f.read()
     return x509.load_pem_x509_certificate(pem_data, default_backend())
 
-private_key = load_privateKey("/home/toto/crypto/key4.pem")
-signature = signMsg(message, private_key)
 
-print(base64.b64encode(signature))
-
-aze = load_cert("CRT.pem")
-
-def verification(message1, signature1, certificat1):
+def verifSignMsg(message1, signature1, certificat1):
     public_key = certificat1.public_key()
     # subject = certificat1.subject()
 
@@ -68,13 +62,6 @@ def verification(message1, signature1, certificat1):
         print("attention signature invalide")
         print("message n'a pas été signé par le propriétaire du certificat")        
 
-
-efd = verification(message, signature, aze)
-
-print(efd)
-
-
-
 def verifySignCert(cert, certCA):
     CA_publicKey = certCA.public_key()
     verif = CA_publicKey.verify(
@@ -89,6 +76,15 @@ def verifySignCert(cert, certCA):
     else:
         print("certificat non validé par le CA")
 
-CA_cert = load_cert("/home/toto/crypto/certificate.pem")
 
-verifySignCert(aze, CA_cert)
+
+
+
+
+private_key = load_privateKey("/home/toto/crypto/key4.pem")
+signature = signMsg(message, private_key)
+certClient = load_cert("CRT.pem")
+CA_cert = load_cert("/home/toto/crypto/certificate.pem")
+verifSignMsgClient = verifSignMsg(message, signature, certClient)
+print(verifSignMsgClient)
+verifySignCert(certClient, CA_cert)
