@@ -15,7 +15,8 @@ def generateKeyRSA(a, b):
     return ("Generation Key OK")
 
 
-generateKeyRSA(65537, 2048)
+privateKeyRSA = generateKeyRSA(65537, 2048)
+
 #key = rsa.generate_private_key(
  #   public_exponent=65537,
   #  key_size=2048,
@@ -29,12 +30,14 @@ def saveToFile(privateKey, filename):
 		crt_file_obj.close()
 	return " Key file: " + filename
 
-with open("/home/toto/crypto/key4.pem", "wb") as f:
-    f.write(key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.BestAvailableEncryption(b"passphrase"),
-    ))
+saveToFile(privateKeyRSA, "RSA.pem")
+
+#with open("/home/toto/crypto/key4.pem", "wb") as f:
+#    f.write(key.private_bytes(
+#        encoding=serialization.Encoding.PEM,
+#        format=serialization.PrivateFormat.TraditionalOpenSSL,
+#        encryption_algorithm=serialization.BestAvailableEncryption(b"passphrase"),
+#    ))
 
 
 # Generate a CSR
