@@ -30,32 +30,31 @@ def signCSR(csr_cert, ca_cert, private_ca_key):
     # return PEM certificate
     return cert.public_bytes(serialization.Encoding.PEM)
 
-
 def saveToFile(certificate, filename):
 	with open(os.open(filename, os.O_CREAT | os.O_WRONLY, 0o1600), 'wb+') as crt_file_obj:
 		crt_file_obj.write(certificate)
 		crt_file_obj.close()
 	return "[+] Le certificat a été générée dans le fichier " + filename
 
-def load_csr(path):
+def loadCSR(path):
     with open(path, 'rb') as f:
         pem_data = f.read()
     return x509.load_pem_x509_csr(pem_data, default_backend()) 
 
-def load_cert(path):
+def loadCert(path):
     with open(path, 'rb') as f:
         pem_data = f.read()
     return x509.load_pem_x509_certificate(pem_data, default_backend())
 
-def load_privateKey(path):
+def loadPrivateKey(path):
     with open(path, 'rb') as f:
         pem_data = f.read()
     return serialization.load_pem_private_key(pem_data, password=b"passphrase")
 
-csr = load_csr('/home/toto/crypto/csr.pem')
-certCA = load_cert('/home/toto/crypto/certificate.pem')
-privateCAKey = load_privateKey('/home/toto/crypto/key2.pem')
+csr = loadCSR('/home/toto/crypto/csr.pem')
+certCA = loadCert('/home/toto/crypto/certificate.pem')
+privateKeyCA = loadPrivateKey('/home/toto/crypto/key2.pem')
 
-aze = signCSR(csr, certCA, privateCAKey)
+aze = signCSR(csr, certCA, privateKeyCA)
 
 saveToFile(aze, "test.pem")
