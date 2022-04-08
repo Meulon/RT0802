@@ -8,11 +8,6 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 from cryptography.hazmat.primitives.asymmetric import padding
 
-def load_privateKey(path):
-    with open(path, 'rb') as f:
-        pem_data = f.read()
-    return serialization.load_pem_private_key(pem_data, password=b"passphrase")
-
 def load_publicKey(path):
     with open(path, 'rb') as f1:
         pem1_data = f1.read()
@@ -73,9 +68,6 @@ def verifySignCert(cert, certCA):
     else:
         print("certificat non validé par le CA")
 
-message = b"A message I want to sign"
-privateKeyClient = load_privateKey("RSAClient.pem")
-signatureMsg = signMsg(message, privateKeyClient)
 certClient = load_cert("certClient.pem")
 CA_cert = load_cert("certCA.pem")
 verifSignMsgClient = verifSignMsg(message, signatureMsg, certClient)
