@@ -35,7 +35,7 @@ cert = x509.CertificateBuilder().subject_name(
 ).issuer_name(
     issuer
 ).public_key(
-    key.public_key()
+    RSAkey.public_key()
 ).serial_number(
     x509.random_serial_number()
 ).not_valid_before(
