@@ -8,20 +8,11 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 import os
 
 # Generate our key
-def generateKeyRSA(a, b):
-    rsa.generate_private_key(
-        public_exponent=a,
-        key_size=b
-    )
-    return ("Generation Key OK")
 
-
-privateKeyRSA = generateKeyRSA(65537, 2048)
-
-#key = rsa.generate_private_key(
- #   public_exponent=65537,
-  #  key_size=2048,
-#)
+RSAkey = rsa.generate_private_key(
+    public_exponent=65537,
+    key_size=2048,
+)
 
 # Write our key to disk for safe keeping
 
@@ -31,7 +22,7 @@ def saveToFile(privateKey, filename):
 		crt_file_obj.close()
 	return " Key file: " + filename
 
-saveToFile(privateKeyRSA, "RSA.pem")
+saveToFile(RSAkey, "RSA.pem")
 
 #with open("/home/toto/crypto/key4.pem", "wb") as f:
 #    f.write(key.private_bytes(
