@@ -5,6 +5,7 @@ from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
+import os
 
 # Generate our key
 def generateKeyRSA(a, b):
