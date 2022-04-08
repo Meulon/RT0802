@@ -69,12 +69,16 @@ def verifySignCert(cert, certCA):
     else:
         print("certificat non validé par le CA")
 
+def loadSig(sig):
+    with open("sig") as s:
+        sig = s.read()
+        decoded_sig = base64.b64decode(sig)
+    return decoded_sig
+
 message = b"A message with 5 words"
 certClient = load_cert("certClient.pem")
-with open("sig") as s:
-    sig = s.read()
-    decoded_sig = base64.b64decode(sig)
 CA_cert = load_cert("certCA.pem")
-verifSignMsgClient = verifSignMsg(message, decoded_sig, certClient)
+decodedSig = loadSig("sig")
+verifSignMsgClient = verifSignMsg(message, decodedSig, certClient)
 print(verifSignMsgClient)
 verifySignCert(certClient, CA_cert)
