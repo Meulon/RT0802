@@ -10,7 +10,7 @@ import datetime
 from datetime import timedelta, datetime 
 import os 
 
-def sign_certificate_request(csr_cert, ca_cert, private_ca_key):
+def signCSR(csr_cert, ca_cert, private_ca_key):
     cert = x509.CertificateBuilder().subject_name(
         csr_cert.subject
     ).issuer_name(
@@ -31,17 +31,11 @@ def sign_certificate_request(csr_cert, ca_cert, private_ca_key):
     return cert.public_bytes(serialization.Encoding.PEM)
 
 
-def savecrttofile(certificate):
-	crt_file="CRT.pem"
-	try:
-		os.umask(0)
-		with open(os.open(crt_file, os.O_CREAT | os.O_WRONLY, 0o1600), 'wb+') as crt_file_obj:
-			crt_file_obj.write(certificate)
-			crt_file_obj.close()
-	except:
-		raise
-	else:
-		return "[+] Le certificat a été générée dans le fichier " + crt_file
+def saveToFile(certificate, filename):
+	with open(os.open(filename, os.O_CREAT | os.O_WRONLY, 0o1600), 'wb+') as crt_file_obj:
+		crt_file_obj.write(certificate)
+		crt_file_obj.close()
+	return "[+] Le certificat a été générée dans le fichier " + filename
 
 def load_csr(path):
     with open(path, 'rb') as f:
@@ -75,6 +69,6 @@ privateCAKey = load_privateKey('/home/toto/crypto/key2.pem')
 # cert = x509.load_pem_x509_certificate(cert_data, default_backend())
 # privKey = serialization.load_pem_private_key(keyy, password=None)
 
-aze = sign_certificate_request(csr, certCA, privateCAKey)
+aze = signCSR(csr, certCA, privateCAKey)
 
-savecrttofile(aze)
+saveToFile(aze, "test.pem")
