@@ -71,7 +71,7 @@ def verifySignCert(cert, certCA):
 
 message = b"A message with 5 words"
 certClient = load_cert("certClient.pem")
-with open("test.sign") as s:
+with open("sig") as s:
     sig = s.read()
     decoded_sig = base64.b64decode(sig)
 CA_cert = load_cert("certCA.pem")
