@@ -71,6 +71,6 @@ def verifySignCert(cert, certCA):
 message = b"A message with 5 words"
 certClient = load_cert("certClient.pem")
 CA_cert = load_cert("certCA.pem")
-verifSignMsgClient = verifSignMsg(message, "test.sign", certClient)
+verifSignMsgClient = verifSignMsg(message, b"test.sign", certClient)
 print(verifSignMsgClient)
 verifySignCert(certClient, CA_cert)
