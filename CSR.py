@@ -14,6 +14,8 @@ def generateKeyRSA(public_exponent, key_size):
     )
     return ("Generation Key OK")
 
+
+generateKeyRSA(65537, 2048)
 #key = rsa.generate_private_key(
  #   public_exponent=65537,
   #  key_size=2048,
