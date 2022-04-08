@@ -16,6 +16,11 @@ def saveKeysToFile(keyRSA, filename):
         ))
     return " Key file: " + filename
 
+def saveCert(cert, filename):
+    with open(filename, "wb") as f:
+        f.write(cert.public_bytes(serialization.Encoding.PEM))
+    return " Cert file: " + filename
+
 # Generate our key
 RSAkey = rsa.generate_private_key(
     public_exponent=65537,
@@ -41,9 +46,7 @@ cert = x509.CertificateBuilder().subject_name(
 ).not_valid_before(
     datetime.datetime.utcnow()
 ).not_valid_after(
-
     # Our certificate will be valid for 10 days
-
     datetime.datetime.utcnow() + datetime.timedelta(days=10)
 ).add_extension(
     x509.SubjectAlternativeName([x509.DNSName(u"localhost")]),
@@ -52,7 +55,5 @@ cert = x509.CertificateBuilder().subject_name(
 ).sign(RSAkey, hashes.SHA256())
 # Write our certificate out to disk.
 
-with open("/home/toto/crypto/certificate.pem", "wb") as f:
-    f.write(cert.public_bytes(serialization.Encoding.PEM))
-
+saveCert(cert, "certCA.pem")
 saveKeysToFile(RSAkey, "RSACA.pem")
