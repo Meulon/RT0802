@@ -74,9 +74,9 @@ def verifySignCert(cert, certCA):
         print("certificat non validé par le CA")
 
 message = b"A message I want to sign"
-privateKeyClient = load_privateKey("/home/toto/crypto/key4.pem")
+privateKeyClient = load_privateKey("RSAClient.pem")
 signatureMsg = signMsg(message, privateKeyClient)
-certClient = load_cert("CRT.pem")
+certClient = load_cert("certClient.pem")
 CA_cert = load_cert("/home/toto/crypto/certificate.pem")
 verifSignMsgClient = verifSignMsg(message, signatureMsg, certClient)
 print(verifSignMsgClient)
