@@ -68,8 +68,9 @@ def verifySignCert(cert, certCA):
     else:
         print("certificat non validé par le CA")
 
+message = b"A message with 5 words"
 certClient = load_cert("certClient.pem")
 CA_cert = load_cert("certCA.pem")
-verifSignMsgClient = verifSignMsg(message, signatureMsg, certClient)
+verifSignMsgClient = verifSignMsg(message, "test.sign", certClient)
 print(verifSignMsgClient)
 verifySignCert(certClient, CA_cert)
