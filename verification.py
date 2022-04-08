@@ -1,5 +1,6 @@
 #!/usr/local/bin/python3
 
+import base64
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization
@@ -70,7 +71,9 @@ def verifySignCert(cert, certCA):
 
 message = b"A message with 5 words"
 certClient = load_cert("certClient.pem")
-file = open("test.sign", "r")
+with open("test.sign") as s:
+    sig = s.read()
+    decoded_sig = base64.b64decode(sig)
 CA_cert = load_cert("certCA.pem")
 verifSignMsgClient = verifSignMsg(message, file, certClient)
 print(verifSignMsgClient)
