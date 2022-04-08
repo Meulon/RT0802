@@ -7,10 +7,10 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 
 # Generate our key
-def generateKeyRSA(public_exponent, key_size):
+def generateKeyRSA(a, b):
     rsa.generate_private_key(
-        public_exponent=public_exponent
-        key_size=key_size
+        public_exponent=a,
+        key_size=b
     )
     return ("Generation Key OK")
 
