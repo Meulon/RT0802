@@ -36,7 +36,7 @@ subject = issuer = x509.Name([
 
 # Generate a CSR
 
-csr = x509.CertificateSigningRequestBuilder().subject_name(subject()).sign(RSAkey, hashes.SHA256())
+csr = x509.CertificateSigningRequestBuilder().subject_name(subject).sign(RSAkey, hashes.SHA256())
 # Write our CSR out to disk.
 
 with open("/home/toto/crypto/csr.pem", "wb") as f:
