@@ -75,6 +75,6 @@ with open("test.sign") as s:
     sig = s.read()
     decoded_sig = base64.b64decode(sig)
 CA_cert = load_cert("certCA.pem")
-verifSignMsgClient = verifSignMsg(message, file, certClient)
+verifSignMsgClient = verifSignMsg(message, decoded_sig, certClient)
 print(verifSignMsgClient)
 verifySignCert(certClient, CA_cert)
