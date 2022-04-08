@@ -55,7 +55,7 @@ csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name([
     ]),
     critical=False,
 # Sign the CSR with our private key.
-).sign(key, hashes.SHA256())
+).sign(RSAkey, hashes.SHA256())
 # Write our CSR out to disk.
 
 with open("/home/toto/crypto/csr.pem", "wb") as f:
