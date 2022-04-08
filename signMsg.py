@@ -33,5 +33,3 @@ message = b"A message with 5 words"
 privateKeyClient = load_privateKey("RSAClient.pem")
 signatureMsg = signMsg(message, privateKeyClient)
 saveToFile(signatureMsg, "test.sign")
-
-print(aze)
