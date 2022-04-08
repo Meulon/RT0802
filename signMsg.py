@@ -1,6 +1,5 @@
 #!/usr/local/bin/python3
 
-import base64
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization
@@ -8,8 +7,6 @@ from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 from cryptography.hazmat.primitives.asymmetric import padding
-
-message = b"A message I want to sign"
 
 def load_privateKey(path):
     with open(path, 'rb') as f:
@@ -76,15 +73,11 @@ def verifySignCert(cert, certCA):
     else:
         print("certificat non validé par le CA")
 
-
-
-
-
-
-private_key = load_privateKey("/home/toto/crypto/key4.pem")
-signature = signMsg(message, private_key)
+message = b"A message I want to sign"
+privateKeyClient = load_privateKey("/home/toto/crypto/key4.pem")
+signatureMsg = signMsg(message, privateKeyClient)
 certClient = load_cert("CRT.pem")
 CA_cert = load_cert("/home/toto/crypto/certificate.pem")
-verifSignMsgClient = verifSignMsg(message, signature, certClient)
+verifSignMsgClient = verifSignMsg(message, signatureMsg, certClient)
 print(verifSignMsgClient)
 verifySignCert(certClient, CA_cert)
