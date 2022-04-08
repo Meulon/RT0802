@@ -42,9 +42,6 @@ def load_csr(path):
         pem_data = f.read()
     return x509.load_pem_x509_csr(pem_data, default_backend()) 
 
-#with open('/home/toto/crypto/csr.pem', 'rb') as f1:
-#   csr_data = f1.read()
-
 def load_cert(path):
     with open(path, 'rb') as f:
         pem_data = f.read()
@@ -55,19 +52,9 @@ def load_privateKey(path):
         pem_data = f.read()
     return serialization.load_pem_private_key(pem_data, password=b"passphrase")
 
-# with open('/home/toto/crypto/certificate.pem', 'rb') as f2:
-#        cert_data = f2.read()
-
-# with open('/home/toto/crypto/key2.pem', 'rb') as f3:
-#        keyy = f3.read()
-
 csr = load_csr('/home/toto/crypto/csr.pem')
 certCA = load_cert('/home/toto/crypto/certificate.pem')
 privateCAKey = load_privateKey('/home/toto/crypto/key2.pem')
-
-# csr = x509.load_pem_x509_csr(csr_data, default_backend())
-# cert = x509.load_pem_x509_certificate(cert_data, default_backend())
-# privKey = serialization.load_pem_private_key(keyy, password=None)
 
 aze = signCSR(csr, certCA, privateCAKey)
 
