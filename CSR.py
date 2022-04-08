@@ -16,11 +16,15 @@ RSAkey = rsa.generate_private_key(
 
 # Write our key to disk for safe keeping
 
-def saveToFile(privateKey, filename):
-	with open(os.open(filename, os.O_CREAT | os.O_WRONLY, 0o1600), 'wb+') as crt_file_obj:
-		crt_file_obj.write(privateKey)
-		crt_file_obj.close()
-	return " Key file: " + filename
+def saveToFile(keyRSA, filename):
+    with open(filename, "wb") as f:
+        f.write(keyRSA.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.TraditionalOpenSSL,
+            encryption_algorithm=serialization.BestAvailableEncryption(b"passphrase"),
+        ))
+    return " Key file: " + filename
+
 
 saveToFile(RSAkey, "RSA.pem")
 
