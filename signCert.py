@@ -51,8 +51,8 @@ def loadPrivateKey(path):
         pem_data = f.read()
     return serialization.load_pem_private_key(pem_data, password=b"passphrase")
 
-csr = loadCSR('/home/toto/crypto/csr.pem')
-certCA = loadCert('/home/toto/crypto/certificate.pem')
+csr = loadCSR('csr.pem')
+certCA = loadCert('certCA.pem')
 privateKeyCA = loadPrivateKey('RSACA.pem')
 aze = signCSR(csr, certCA, privateKeyCA)
 saveToFile(aze, "certClient.pem")
