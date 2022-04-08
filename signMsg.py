@@ -77,7 +77,7 @@ message = b"A message I want to sign"
 privateKeyClient = load_privateKey("RSAClient.pem")
 signatureMsg = signMsg(message, privateKeyClient)
 certClient = load_cert("certClient.pem")
-CA_cert = load_cert("/home/toto/crypto/certificate.pem")
+CA_cert = load_cert("certCA.pem")
 verifSignMsgClient = verifSignMsg(message, signatureMsg, certClient)
 print(verifSignMsgClient)
 verifySignCert(certClient, CA_cert)
