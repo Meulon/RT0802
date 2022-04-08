@@ -32,7 +32,6 @@ def load_privateKey(path):
 message = b"A message with 5 words"
 privateKeyClient = load_privateKey("RSAClient.pem")
 signatureMsg = signMsg(message, privateKeyClient)
-aze = base64.urlsafe_b64encode(signatureMsg)
-saveToFile(aze, "test.sign")
+saveToFile(signatureMsg, "test.sign")
 
 print(aze)
