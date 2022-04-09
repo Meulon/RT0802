@@ -8,11 +8,15 @@
 - Les objets envoient leurs message à la passerelle et s’arrangent pour que ceux ci soient authentifiés.
 - 172.19.129.1
 
+## Schéma de principe
+
 ## Code
 
 ### Initialisation du CA
 
-## Génération de la paire de clés RSA
+On initialise l'autorité en lui générant une paire de clés RSA puis lui créer un certificat auto-signé.
+
+#### Génération de la paire de clés RSA
 
 ```python
 RSAkey = rsa.generate_private_key(
@@ -21,7 +25,7 @@ RSAkey = rsa.generate_private_key(
 )
 ```
 
-### Génération d'un certificat auto-signé
+#### Génération d'un certificat auto-signé
 
 ```python
 subject = issuer = x509.Name([
@@ -43,17 +47,14 @@ cert = x509.CertificateBuilder().subject_name(
 ).not_valid_before(
     datetime.datetime.utcnow()
 ).not_valid_after(
-    # Our certificate will be valid for 10 days
     datetime.datetime.utcnow() + datetime.timedelta(days=10)
 ).add_extension(
     x509.SubjectAlternativeName([x509.DNSName(u"localhost")]),
     critical=False,
-# Sign our certificate with our private key
 ).sign(RSAkey, hashes.SHA256())
-# Write our certificate out to disk.
 ```
 
-### Sauvegarde de la clé dans un fichier
+#### Sauvegarde de la clé dans un fichier
 
 ```python
 def saveKeysToFile(keyRSA, filename):
@@ -61,12 +62,13 @@ def saveKeysToFile(keyRSA, filename):
         f.write(keyRSA.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.TraditionalOpenSSL,
+            #passphrase de la clé = passphrase
             encryption_algorithm=serialization.BestAvailableEncryption(b"passphrase"),
         ))
     return " Key file: " + filename
 ```
 
-### Sauvegarde du certificat
+#### Sauvegarde du certificat
 
 ```python
 def saveCert(cert, filename):
@@ -75,16 +77,18 @@ def saveCert(cert, filename):
     return "Cert file: " + filename
 ```
 
-### Appel des fonctions
+#### Appel des fonctions
 
 ```python
 saveCert(cert, "certCA.pem")
 saveKeysToFile(RSAkey, "RSACA.pem")
 ```
 
-## Initialisation du client
+### Initialisation du client
 
-### Génération de la paire de clés
+On initialise le client en lui générant une paire de clés RSA
+
+#### Génération de la paire de clés
 
 ```python
 RSAkey = rsa.generate_private_key(
@@ -93,7 +97,7 @@ RSAkey = rsa.generate_private_key(
 )
 ```
 
-### Sauvegarde de la paire de clés dans un fichier
+#### Sauvegarde de la paire de clés dans un fichier
 
 ```python
 def saveKeysToFile(keyRSA, filename):
@@ -106,24 +110,28 @@ def saveKeysToFile(keyRSA, filename):
     return " Key file: " + filename
 ```
 
-### Appel de la fonction
+#### Appel de la fonction
 
 ```python
 saveKeysToFile(RSAkey, "RSAClient.pem")
 ```
 
-## Génération d'un CSR sur le client
+### Génération d'un CSR sur le client
 
-### Charger la clé privée du client
+Le demandeur d'un certificat doit au préalable générer une CSR pour ensuite le transmettre à la CA qui va l'utiliser pour générer le certifcat au client.
+
+#### Charger la clé privée du client
 
 ```python
 def loadPrivateKey(path):
     with open(path, 'rb') as f:
         pem_data = f.read()
-    return serialization.load_pem_private_key(pem_data, password=b"passph
+    return serialization.load_pem_private_key(pem_data, password=b"passphrase"
 ```
 
-### Génération du CSR
+#### Génération du CSR
+
+Info qui va être renseigné dans le certificat :
 
 ```python
 subject = issuer = x509.Name([
@@ -139,7 +147,7 @@ privateKey = loadPrivateKey('RSAClient.pem')
 csr = x509.CertificateSigningRequestBuilder().subject_name(subject).sign(privateKey, hashes.SHA256())
 ```
 
-### Sauvegarder le CSR dans un fichier
+#### Sauvegarder le CSR dans un fichier
 
 ```python
 def saveCSR(csr, filename):
@@ -148,15 +156,17 @@ def saveCSR(csr, filename):
     return "CSR file: " + filename
 ```
 
-### Appel fonction
+#### Appel fonction
 
 ```python
 saveCSR(csr, "csr.pem")
 ```
 
-## CA signe le CSR
+### CA signe le CSR
 
-### Charger le CSR
+Une fois que le CA a recu le CSR, il va pouvoir générer le certificat pour le demandeur.
+
+#### Charger le CSR
 
 ```python
 def loadCSR(path):
@@ -165,7 +175,7 @@ def loadCSR(path):
     return x509.load_pem_x509_csr(pem_data, default_backend()) 
 ```
 
-### Charger certificat CA pour valider le CSR
+#### Charger certificat CA pour valider le CSR
 
 ```python
 def loadCert(path):
@@ -174,7 +184,7 @@ def loadCert(path):
     return x509.load_pem_x509_certificate(pem_data, default_backend())
 ```
 
-### Charger clé privée du CA pour valider le CSR
+#### Charger clé privée du CA pour valider le CSR
 
 ```python
 def loadPrivateKey(path):
@@ -183,7 +193,7 @@ def loadPrivateKey(path):
     return serialization.load_pem_private_key(pem_data, password=b"passphrase")
 ```
 
-### Le CA va pouvoir créer le certificat du client en utilisant le CSR recu, sa clé privée et son certificat
+#### Génération du certificat
 
 ```python
 def signCSR(csr_cert, ca_cert, private_ca_key):
@@ -202,7 +212,7 @@ def signCSR(csr_cert, ca_cert, private_ca_key):
     ).sign(private_ca_key, hashes.SHA256())
 ```
 
-### Sauvegarde du certificat dans un fichier
+#### Sauvegarde du certificat dans un fichier
 
 ```python
 def saveToFile(certificate, filename):
@@ -212,7 +222,7 @@ def saveToFile(certificate, filename):
 	return "[+] Le certificat a été générée dans le fichier " + filename
 ```
 
-### Appel des fonctions
+#### Appel des fonctions
 
 ```python
 csr = loadCSR('csr.pem')
@@ -222,9 +232,11 @@ aze = signCSR(csr, certCA, privateKeyCA)
 saveToFile(aze, "certClient.pem")
 ```
 
-## Le client pour authentifier ses messages va envoyer son message accompagné d'une signature du message (message chiffré avec sa clé privée) et son certificat signé par le CA
+### Signer ses messages
 
-### Charger sa clé privée
+Le client pour authentifier ses messages va envoyer son message accompagné d'une signature du message (message chiffré avec sa clé privée) et son certificat signé par le CA
+
+#### Charger sa clé privée
 
 ```python
 def load_privateKey(path):
@@ -233,7 +245,7 @@ def load_privateKey(path):
     return serialization.load_pem_private_key(pem_data, password=b"passphrase")
 ```
 
-### Signer le message
+#### Signer le message
 
 ```python
 def signMsg(message, key):
@@ -247,7 +259,7 @@ def signMsg(message, key):
     )
 ```
 
-### Sauvegarder la signature dans un fichier
+#### Sauvegarder la signature dans un fichier
 
 ```python
 def saveToFile(signature, filename):
@@ -257,7 +269,7 @@ def saveToFile(signature, filename):
 	return "[+] Le certificat a été générée dans le fichier " + filename
 ```
 
-### Appel des fonctions
+#### Appel des fonctions
 
 ```python
 message = b"A message with 5 words"
@@ -267,9 +279,15 @@ sig = base64.b64encode(signatureMsg)
 saveToFile(sig, "sig")
 ```
 
-## L'interlocuteur va valider la signature et le certificat
+### Vérification
 
-### charger certificat du CA
+Pour garantir l'authenfication des échanges:
+
+- on verifie que la clé publique renseigné dans le certificat déchiffre bien la signature, on a ainsi confirmation que c'est bien l'entité renseigné dans le certificat qui a signé le message.
+
+- on vérifie que le certificat est bien dans le domaine de confiance du CA en vérifiant le signature du certicat avec la clé publique du CA
+
+#### Charger certificat du CA
 
 ```python
 def load_cert(path):
@@ -278,7 +296,7 @@ def load_cert(path):
     return x509.load_pem_x509_certificate(pem_data, default_backend())
 ```
 
-### charger la signature
+#### Charger la signature
 
 ```python
 def loadSig(sig):
@@ -288,12 +306,11 @@ def loadSig(sig):
     return decoded_sig
 ```
 
-### vérifier la signature du message
+#### Vérifier la signature du message
 
 ```python
 def verifSignMsg(message1, signature1, certificat1):
     public_key = certificat1.public_key()
-    # subject = certificat1.subject()
 
     verif = public_key.verify(
         signature1,
@@ -309,15 +326,13 @@ def verifSignMsg(message1, signature1, certificat1):
         print("message:", message1)
         print("signature valide")
         print("message valide")
-        # print("provient bien de:", subject)
-        # VALIDER QUE CE SOIT BIEN L'UTILISATEUR DU CERTIFICAT
     else:
         print("message:", message1)
         print("attention signature invalide")
         print("message n'a pas été signé par le propriétaire du certificat")     
 ```
 
-### vérifier la signature du certificat
+#### Vérifier la signature du certificat
 
 ```python
 def verifySignCert(cert, certCA):
@@ -325,7 +340,6 @@ def verifySignCert(cert, certCA):
     verif = CA_publicKey.verify(
         cert.signature,
         cert.tbs_certificate_bytes,
-        # Depends on the algorithm used to create the certificate
         padding.PKCS1v15(),
         cert.signature_hash_algorithm,
     )
@@ -335,7 +349,7 @@ def verifySignCert(cert, certCA):
         print("certificat non validé par le CA")
 ```
 
-### appel des fonctions
+#### appel des fonctions
 
 ```python
 message = b"A message with 5 words"
