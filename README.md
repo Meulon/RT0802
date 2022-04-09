@@ -10,6 +10,8 @@
 
 ## Schéma de principe
 
+![RT0801_schema](https://user-images.githubusercontent.com/16819980/162580936-0322edf3-25b6-4b67-b268-78900a739bf9.svg)
+
 ## Code
 
 ### Initialisation du CA
