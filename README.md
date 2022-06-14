@@ -289,7 +289,7 @@ Pour garantir l'authenfication des échanges:
 
 - on vérifie que le certificat est bien dans le domaine de confiance du CA en vérifiant le signature du certicat avec la clé publique du CA
 
-#### Charger certificat du CA
+#### Charger les certificats
 
 ```python
 def load_cert(path):
