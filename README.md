@@ -353,9 +353,8 @@ save_to_file("empreinte signée", signMsg64, inputSignatureFilename)
 Dès reception d'un message, le destinataire va effectuer les vérifications suivantes:
 
 - déchiffrer le message (confidentialité)
-- hash le message (intégrité)
-- dechiffrer la signature pour obtenir l'empreinte faite par l'expeditaire (authenticité de l'expediteur)
-- comparer l'empreinte envoyé et l'empreinte faite par le destinataire (integrité)
+- déchiffrer la signature avec clé publique du destinataire (authentifie l'expediteur)
+- hasher le message et comparer le résultat avec celle fourni avec la signature déchiffré (intégrité)
 - verifie l'authenticité du certificat envoyé avec avec le message en utilisant le certificat de l'autorité (authenticité du certificat)
 
 #### Charger les certificats
