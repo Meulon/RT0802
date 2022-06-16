@@ -234,10 +234,14 @@ aze = signCSR(csr, certCA, privateKeyCA)
 saveToFile(aze, "certClient.pem")
 ```
 
-### Signer ses messages
+### Envoie des messages
 
-Le client pour authentifier ses messages va envoyer son message accompagné d'une signature du message (message chiffré avec sa clé privée) et son certificat signé par le CA
+Lorsqu'un équipement souhaite envoyé un message il effectue les étapes suivantes:
 
+- hash le message
+- chiffre l'empreinte avec sa clé privée
+- chiffre le message avec la clé publique de l'expediteur
+  
 #### Charger sa clé privée
 
 ```python
@@ -247,7 +251,16 @@ def load_privateKey(path):
     return serialization.load_pem_private_key(pem_data, password=b"passphrase")
 ```
 
-#### Signer le message
+#### Charger certificat
+
+```python
+def load_cert(path):
+    with open(path, 'rb') as f:
+        pem_data = f.read()
+    return x509.load_pem_x509_certificate(pem_data, default_backend())
+```
+
+#### Signer l'empreinte
 
 ```python
 def signMsg(message, key):
@@ -261,33 +274,89 @@ def signMsg(message, key):
     )
 ```
 
-#### Sauvegarder la signature dans un fichier
+#### Chiffrer le message ou l'empreinte 
 
 ```python
-def saveToFile(signature, filename):
-	with open(os.open(filename, os.O_CREAT | os.O_WRONLY, 0o1600), 'wb+') as crt_file_obj:
-		crt_file_obj.write(signature)
-		crt_file_obj.close()
-	return "[+] Le certificat a été générée dans le fichier " + filename
+def encrypt_msg(message, certificat):
+    publicKey = certificat.public_key()
+
+    return publicKey.encrypt(
+            message,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None
+                )
+            )
+```
+
+#### Sauvegarder le message ou la signature
+
+```python
+def save_to_file(contenu, message, filename):
+        with open(os.open(filename, os.O_CREAT | os.O_WRONLY, 0o1600), 'wb+') as msg_obj:
+                msg_obj.write(message)
+                msg_obj.close()
+        print("[+] " + contenu + " stocké dans le fichier: " + filename)
 ```
 
 #### Appel des fonctions
 
+##### input
+
 ```python
-message = b"A message with 5 words"
-privateKeyClient = load_privateKey("RSAClient.pem")
-signatureMsg = signMsg(message, privateKeyClient)
-sig = base64.b64encode(signatureMsg)
-saveToFile(sig, "sig")
+message = input("Votre message à chiffre: ")
+inputCert = input("Indiquez le certificat du destinataire: ")
+inputPrivateKey = input("Indiquez votre clé privée: ")
+inputCiphertextFilename = input("Nom de fichier du message chiffré: ")
+inputSignatureFilename = input("Nom de fichier de la signature: ")
 ```
 
-### Vérification
+##### initialisation
 
-Pour garantir l'authenfication des échanges:
+```python
+message64 = str.encode(message)
+certC2 = load_cert(inputCert + ".pem")
+privateKey = load_privateKey(inputPrivateKey + ".pem")
+```
 
-- on verifie que la clé publique renseigné dans le certificat déchiffre bien la signature, on a ainsi confirmation que c'est bien l'entité renseigné dans le certificat qui a signé le message.
+##### chiffrement msg
 
-- on vérifie que le certificat est bien dans le domaine de confiance du CA en vérifiant le signature du certicat avec la clé publique du CA
+```python
+ciphertext = encrypt_msg(message64, certC2)
+ciphertext64 = base64.b64encode(ciphertext)
+```
+
+##### sauvegarde message chiffré
+
+```python
+save_to_file("message chiffré", ciphertext64, inputCiphertextFilename)
+```
+
+##### signature empreinte msg
+
+```python
+digest = hash_msg(message64) # empreinte message
+digest64 = base64.b64encode(digest)
+signMsg = sign_msg(digest, privateKey)
+signMsg64 = base64.b64encode(signMsg)
+```
+
+##### sauvegarde empreinte signé
+
+```python
+save_to_file("empreinte signée", signMsg64, inputSignatureFilename)
+```
+
+### Reception de message
+
+Dès reception d'un message, le destinataire va effectuer les vérifications suivantes:
+
+- déchiffrer le message (confidentialité)
+- hash le message (intégrité)
+- dechiffrer la signature pour obtenir l'empreinte faite par l'expeditaire (authenticité de l'expediteur)
+- comparer l'empreinte envoyé et l'empreinte faite par le destinataire (integrité)
+- verifie l'authenticité du certificat envoyé avec avec le message en utilisant le certificat de l'autorité (authenticité du certificat)
 
 #### Charger les certificats
 
@@ -298,67 +367,195 @@ def load_cert(path):
     return x509.load_pem_x509_certificate(pem_data, default_backend())
 ```
 
-#### Charger la signature
+#### Charger message/empreinte chiffré
 
 ```python
-def loadSig(sig):
-    with open("sig") as s:
-        sig = s.read()
-        decoded_sig = base64.b64decode(sig)
-    return decoded_sig
+def load_ciphertext(path):
+    with open(path, 'rb') as f:
+        ciphertext = f.read()
+        decodedCiphertext = base64.b64decode(ciphertext)
+    return decodedCiphertext
 ```
 
-#### Vérifier la signature du message
+#### Charger clé privée
 
 ```python
-def verifSignMsg(message1, signature1, certificat1):
-    public_key = certificat1.public_key()
+def load_privateKey(path):
+    with open(path, 'rb') as f:
+        pem_data = f.read()
+    return serialization.load_pem_private_key(pem_data, password=b"passphrase")
+```
 
-    verif = public_key.verify(
-        signature1,
-        message1,
-        padding.PSS(
-            mgf=padding.MGF1(hashes.SHA256()),
-            salt_length=padding.PSS.MAX_LENGTH
-    ),
-        hashes.SHA256()
-    )
+#### Charger signature
+
+```python
+def load_file(file):
+    with open(file) as s:
+        file = s.read()
+        decoded_file = base64.b64decode(file)
+    return decoded_file
+```
+
+#### Vérifier que la clé privée peut déchiffrer le message/empreinte chiffré
+
+```python
+def verif_private_key(ciphertext, privateKey):
+    try:
+        data = privateKey.decrypt(
+            ciphertext,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None
+                )
+            )
+        
+        verif = "valid key"
+
+    except ValueError:
+       verif = "wrong key" 
+
+    if verif == "valid key":
+        print("[+] clé valide")
+        result = "valid key"
+    else:
+        print("[-] mauvaise clé")
+        result = "wrong key"
+
+    return result
+```
+
+#### Verifier la signature
+
+```python
+def verif_sign(ciphertext, signature, certificat, verifKey, privateKey):
+    if verifKey == "valid key":
+        plaintext = privateKey.decrypt(
+                ciphertext,
+                padding.OAEP(
+                    mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                    algorithm=hashes.SHA256(),
+                    label=None
+                    ))
+        public_key = certificat.public_key()
+        digest = hashes.Hash(hashes.SHA256())
+        digest.update(plaintext)
+        digestMessage = digest.finalize()
     
-    if verif == None:
-        print("message:", message1)
-        print("signature valide")
-        print("message valide")
+        try:
+            verif = public_key.verify(
+                signature,
+                digestMessage,
+                padding.PSS(
+                    mgf=padding.MGF1(hashes.SHA256()),
+                    salt_length=padding.PSS.MAX_LENGTH
+            ),
+                hashes.SHA256()
+            )
+
+        except exceptions.InvalidSignature:
+            verif = "invalid"
+
+        if verif == None:
+            print("[+] message intègre et provient bien du propriétaire du certificat")
+            result = "valide"
+        else:
+            print("[-] message corrompu et/ou ne provient pas du propriétaire du certificat")
+            result = "invalide"
     else:
-        print("message:", message1)
-        print("attention signature invalide")
-        print("message n'a pas été signé par le propriétaire du certificat")     
+        print("[-] impossible de dechiffrer l'empreinte")
+        result = "invalide"
+        
+    return result
 ```
 
-#### Vérifier la signature du certificat
+#### Vérifier l'authenticité du certificat
 
 ```python
-def verifySignCert(cert, certCA):
-    CA_publicKey = certCA.public_key()
-    verif = CA_publicKey.verify(
-        cert.signature,
-        cert.tbs_certificate_bytes,
-        padding.PKCS1v15(),
-        cert.signature_hash_algorithm,
-    )
+def verif_cert(cert, certCA):
+    publicKeyCA = certCA.public_key()
+
+    try:
+        verif = publicKeyCA.verify(
+                cert.signature,
+                cert.tbs_certificate_bytes,
+                padding.PKCS1v15(),
+                cert.signature_hash_algorithm,
+                )
+
+    except exceptions.InvalidSignature:
+        verif = "invalid"
+
     if verif == None:
-        print("certificat authentique")
+        print("[+] certificat authentique : signé par le CA")
+        result = "valide"
     else:
-        print("certificat non validé par le CA")
+        print("[-] certificat factice : non signé par le CA")
+        result = "factice"
+
+    return result
 ```
 
-#### appel des fonctions
+#### Lecture du fichier si toutes les conditions sont remplies
 
 ```python
-message = b"A message with 5 words"
-certClient = load_cert("certClient.pem")
-CA_cert = load_cert("certCA.pem")
-decodedSig = loadSig("sig")
-verifSignMsgClient = verifSignMsg(message, decodedSig, certClient)
-print(verifSignMsgClient)
-verifySignCert(certClient, CA_cert)
+def read_msg(verifSign, verifCert, verifKey, privateKey, ciphertext):
+    if verifSign == "valide" and verifCert == "valide" and verifKey == "valid key" : 
+        plaintext64 = privateKey.decrypt(
+            ciphertext,
+            padding.OAEP(
+                mgf=padding.MGF1(algorithm=hashes.SHA256()),
+                algorithm=hashes.SHA256(),
+                label=None
+                ))
+        plaintext = plaintext64.decode("utf-8")
+        print("[+] contenu du message: " + plaintext)
+    else:
+        print("[-] non affichage du contenu: signature et/ou certificat non conforme et/ou mauvaise clé")
+```
+
+#### Appel des fonctions
+
+##### Input
+
+```python
+inputSignature = input("Indiquez la signature à utiliser: ")
+inputCert = input("Indiquez le certificat de l'expediteur à utiliser: ")
+inputCertCA = input("Indiquez le certificat CA: ")
+inputPrivateKey = input("Indiquez votre clé privée: ")
+inputCiphertext = input("Indiquez le message chiffré à utiliser: ")
+```
+
+##### Initialisation
+
+```python
+signature = load_file(inputSignature)
+certC1 = load_cert(inputCert+".pem")
+certCA = load_cert(inputCertCA+".pem")
+privateKey = load_privateKey(inputPrivateKey+".pem")
+ciphertext = load_file(inputCiphertext)
+```
+
+##### Déchiffrer message
+
+```python
+verifKey = verif_private_key(ciphertext, privateKey)
+```
+
+##### Vérification de la signature + intégrité du message
+
+```python
+verifSign = verif_sign(ciphertext, signature, certC1, verifKey, privateKey)
+```
+
+##### Vérification de l'authenticité du certificat
+
+```python
+verifCert = verif_cert(certC1, certCA)
+```
+
+##### Lecture du message si verifications OK
+
+```python
+read_msg(verifSign, verifCert, verifKey, privateKey, ciphertext)
 ```
