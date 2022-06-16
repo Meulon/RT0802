@@ -10,7 +10,7 @@
 
 ## Schéma de principe
 
-![RT0801_schema](https://user-images.githubusercontent.com/16819980/162580936-0322edf3-25b6-4b67-b268-78900a739bf9.svg)
+![Untitled Diagram drawio](https://user-images.githubusercontent.com/16819980/174140822-393b5106-82f4-4008-ae0f-dc0e4827b675.png)
 
 ## Code
 
