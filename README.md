@@ -86,7 +86,7 @@ saveCert(cert, "certCA.pem")
 saveKeysToFile(RSAkey, "RSACA.pem")
 ```
 
-### Initialisation du client
+### Initialisation des messagers
 
 On initialise le client en lui générant une paire de clés RSA
 
