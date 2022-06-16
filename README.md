@@ -236,9 +236,9 @@ saveToFile(aze, "certClient.pem")
 
 ### Envoie des messages
 
-Lorsqu'un équipement souhaite envoyé un message il effectue les étapes suivantes:
+Lorsqu'un équipement souhaite envoyer un message il effectue les étapes suivantes:
 
-- hash le message
+- récupère une empreinte du message
 - chiffre l'empreinte avec sa clé privée
 - chiffre le message avec la clé publique de l'expediteur
   
